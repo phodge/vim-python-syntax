@@ -8,6 +8,19 @@ syn case match
 syn spell default
 
 
+" python2 compatibility?
+if ! exists('b:python_py2_compat')
+  " look for a shebang line
+  let b:python_py2_compat = 1
+endif
+if ! exists('b:python_py3_compat')
+  let s:python_py3_compat = 1
+endif
+
+" python3 compatibility?
+let s:python3 = 1
+
+
 " ERRORS {{{
 
 	" these matches are defined first so that they have minimum priority
@@ -306,7 +319,7 @@ syn match pyParamsComma contained /,/ display
 			\ nextgroup=pyCommaError skipwhite skipnl skipempty
 
 " look for unpack args
-syn match pyParamsUnpack contained /\*\*\=/ display
+syn match pyParamsUnpack contained /\*\*\=,\@!/ display
 			\ nextgroup=@Expr,pyCommaError skipwhite
 hi! link pyParamsUnpack Macro
 
@@ -411,7 +424,7 @@ syn region pyDefRegion matchgroup=pyDef start=/\<def\>/ end=/:/ keepend extend
 hi! link pyDef Keyword
 
 syn region pyDefParams contained matchgroup=pyDefDelim start=/(/ end=/)/ keepend extend
-				\ contains=pyDefParam,pyDefParamTuple,pySelf,pyDefComma,pyParamsUnpack,pyComment
+				\ contains=pyDefParam,pyDefParamTuple,pySelf,pyDefComma,pyParamsUnpack,pyComment,pyDefKwargSep
 hi! link pyDefDelim Macro
 syn match pyDefParam contained /\<\h\w*\>/ display
 			\ nextgroup=pyDefParamDefault skipwhite
@@ -423,6 +436,14 @@ hi! link pyDefParamDefault Operator
 syn match pyDefComma contained /,/ display
 			\ nextgroup=pyCommaError skipwhite skipnl skipempty
 hi! link pyDefComma pyDef
+
+syn match pyDefKwargSep contained /\*,\@=/
+if b:python_py2_compat
+  " if we need to be python2-compatible, make the kwarg separator an error
+  hi! link pyDefKwargSep Error
+else
+  hi! link pyDefKwargSep pyDefComma
+endif
 
 syn keyword pyFrom from nextgroup=pyFromModule skipwhite
 syn region pyImportRegion matchgroup=pyFrom start=/\<import\>/ end=/$\|#\@=/
