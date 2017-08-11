@@ -143,6 +143,14 @@ syn match pyIdentifierStatementAfter /\h\w*/ display
 syn match pyAnyComma /,/ display nextgroup=@pyExpr skipwhite skipnl skipempty
 hi! link pyAnyComma Macro
 
+if s:python36
+  syn match pyVarTypeOnly /^\s*\zs\h\w*\s*:/ nextgroup=@pyExpr skipwhite display
+        \ contains=pyVarTypeColon
+  syn match pyVarTypeColon contained /:/
+  syn cluster pyClStatements add=pyVarTypeOnly
+  hi! link pyVarTypeColon Comment
+endif
+
 " match a variable somewhere
 syn cluster pyExpr add=pyIdentifier,pySelf
 syn cluster pyClVars add=pyIdentifier,pySelf
