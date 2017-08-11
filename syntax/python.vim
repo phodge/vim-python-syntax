@@ -347,9 +347,15 @@ hi! link pyParamsKW Include
 hi! link pySimpleAssign pyAssign
 
 syn cluster pyClStatements add=pyPrintRegionAfter
-syn region pyPrintRegionAfter matchgroup=pyPrint start=/\<print\>/ end=/$\|#\@=/ keepend display
-			\ contains=@pyExpr,pyPrintComma,pyPrintRedirect
-			\ contained oneline
+if b:python_py2_compat
+  syn region pyPrintRegionAfter matchgroup=pyPrint start=/\<print\>/ end=/$\|#\@=/ keepend display
+        \ contains=@pyExpr,pyPrintComma,pyPrintRedirect
+        \ contained oneline
+else
+  syn region pyPrintRegionAfter matchgroup=pyPrint start=/\<print\s*(/ end=/)/ keepend display
+        \ contains=@pyExpr,pyPrintComma
+        \ contained oneline
+endif
 
 
 syn region pyIfRegion matchgroup=pyConditional display
