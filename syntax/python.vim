@@ -593,15 +593,25 @@ syn cluster pyExpr add=pyKnownIdentifier
 hi! link pyKnownIdentifier Function
 
 " building a modules tree:
+if ! exists('s:modules')
+  let s:modules = {}
+endif
+let s:modules[bufnr('')] = {}
 function! <SID>AddModule(name, properties) " {{{
-	exe printf('syn keyword pyKnownIdentifier %s nextgroup=pyDot_%s,@pyClOperators,pyCompare,pyParamsRegion skipwhite', a:name, a:name)
-	" add a dot match for that module
-	exe printf('syn match pyDot_%s contained /\./ nextgroup=pyInside_%s', a:name, a:name)
-	" add properties of that module
-	exe printf('syn keyword pyInside_%s contained %s nextgroup=@pyClOperators,pyCompare,pyParamsRegion skipwhite', a:name, a:properties)
-	" link colours
-	exe printf('hi! link pyDot_%s pyDot', a:name)
-	exe printf('hi! link pyInside_%s pyKnownIdentifier', a:name)
+  let l:bufmodules = s:modules[bufnr('')]
+  if ! get(l:bufmodules, a:name, 0)
+    let s:modules[bufnr('')][a:name] = 1
+    " add a keyword for the module name itself
+    exe printf('syn keyword pyKnownIdentifier %s nextgroup=pyDot_%s,@pyClOperators,pyCompare,pyParamsRegion skipwhite', a:name, a:name)
+    " add a dot match for that module
+    exe printf('syn match pyDot_%s contained /\./ nextgroup=pyInside_%s', a:name, a:name)
+    " link colours
+    exe printf('hi! link pyDot_%s pyDot', a:name)
+    exe printf('hi! link pyInside_%s pyKnownIdentifier', a:name)
+  endif
+
+  " add [more] properties of that module
+  exe printf('syn keyword pyInside_%s contained %s nextgroup=@pyClOperators,pyCompare,pyParamsRegion skipwhite', a:name, a:properties)
 endfunction " }}}
 function! <SID>AddSubModule(owner, name, properties) " {{{
 	let l:inside = printf('pyInside_%s_%s', a:owner, a:name)
