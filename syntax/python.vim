@@ -633,6 +633,16 @@ for s:pipe in [ 'stderr', 'stdout' ]
 	call <SID>AddSubModule('sys', s:pipe, 'write')
 endfor
 
+if s:python35
+  call <SID>AddModule('typing', 'Any Union TypeVar Generic NewType Type Iterable Iterator Reversible SupportsInt SupportsFloat SupportsComplex SupportsBytes SupportsAbs SupportsRound Container Hashable Sized AbstractSet MutableSet Mapping MutableMapping Sequence MutableSequence ByteString List Set ForzenSet MappingView KeysView ItemsView ValuesView Awaitable Coroutine AsyncIterable AsyncIterator Dict DefaultDict Generator AsyncGenerator Text io re NamedTuple cast get_type_hints Optional Tuple Callable ClassVar TYPE_CHECKING')
+  " these ones are decorators
+  call <SID>AddModule('typing', 'overload no_type_check no_type_check_decorator')
+  if s:python36
+    " these were added in 3.6
+    call <SID>AddModule('typing', 'Collection Deque ContextManager Counter ChainMap')
+  endif
+endif
+
 " types
 call <SID>AddModule('types', 'NoneType TypeType ObjectType IntType LongType FloatType BooleanType ComplexType StringType UnicodeType, StringTypes BufferType TupleType ListType DictType FunctionType LambdaType CodeType GeneratorType ClassType UnboundMethodType InstanceType MethodType BuiltinFunctionType BuiltinMethodType ModuleType FileType XRangeType TracebackType FrameType SliceType EllipsisType DictProxyType NotImplementedType GetSetDescriptorType MemberDescriptorType')
 
