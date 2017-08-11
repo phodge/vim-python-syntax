@@ -746,6 +746,10 @@ syn match pyMath contained #\%(\*\*\=\|//\=\|[+\-]\)=\@!# display
 			\ nextgroup=@pyExpr skipwhite
 hi! link pyMath Operator
 
+syn match pyEllipsis contained /\.\.\./ display
+hi! link pyEllipsis Function
+syn cluster pyExpr add=pyEllipsis
+
 syn cluster pyClOperators add=pyBitwise
 syn match pyBitwise contained /[&|\^~]=\@!\|<<\|>>/ display
 			\ nextgroup=@pyExpr skipwhite
