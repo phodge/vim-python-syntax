@@ -882,6 +882,18 @@ syn cluster pyClStatements add=pyYield
 syn match pyNot contained /\<not\>\%(\_s*in\)\@!/ nextgroup=pyCompareIn,@pyExpr skipwhite skipnl
 syn match pyYield /\<yield\>\%(\_s*from\>\)\=/ nextgroup=@pyExpr skipwhite
 
+if s:python35
+  syn keyword pyAwait await nextgroup=@pyExpr skipwhite
+  if s:python36
+    syn cluster pyExpr add=pyAwait
+  endif
+  hi! link pyAwait pyYield
+else
+  syn keyword pyAwaitError await
+  syn cluster pyExpr add=pyAwaitError
+  hi! link pyAwaitError Error
+endif
+
 syn match pyUnary contained /[\-+~]\d\@!/
 hi! link pyNot Operator
 hi! link pyYield Statement
