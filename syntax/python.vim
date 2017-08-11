@@ -825,6 +825,11 @@ syn keyword pySpecialMethod contained
 			\ __call__
 			\ __getattr__ __setattr__ __delattr__ __getattribute__
 			\ __get__ __set__ __delete__
+if s:python36
+  " PEP487
+  syn keyword pySpecialMethod contained
+        \ __init_subclass__ __set_name__
+endif
 
 hi! link pyKnownMethod Function
 hi! link pySpecialMethod SpecialChar
