@@ -10,15 +10,30 @@ syn spell default
 
 " python2 compatibility?
 if ! exists('b:python_py2_compat')
-  " look for a shebang line
   let b:python_py2_compat = 1
 endif
-if ! exists('b:python_py3_compat')
-  let s:python_py3_compat = 1
-endif
 
-" python3 compatibility?
-let s:python3 = 1
+" do we want to enable highlighting of any py3 syntax?
+let s:python34 = 1
+let s:python35 = 1
+let s:python36 = 1
+
+if exists('b:python_py3_compat')
+  let s:py3 = type(b:python_py3_compat) == type("") ? b:python_py3_compat : ""
+  " if the buffer var is a string containing a python version, enable
+  " everything up to that version
+  if s:py3 == '3.5'
+    let s:python36 = 0
+  elseif s:py3 == '3.4'
+    let s:python36 = 0
+    let s:python35 = 0
+  elseif s:py3 != '3.6'
+    let s:python36 = 0
+    let s:python35 = 0
+    let s:python34 = 0
+  endif
+  unlet s:py3
+endif
 
 
 " ERRORS {{{
