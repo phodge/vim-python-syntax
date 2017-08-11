@@ -441,6 +441,84 @@ hi! link pyLoop Repeat
 
 " }}}
 
+" {{{ format-strings
+
+  if s:python36
+    syn match pyFStringStart /[fF]\ze['"]/ contained nextgroup=pyFString
+    syn match pyFStringStart /\%([Ff]r\|r[fF]\)\ze['"]/ contained nextgroup=pyFStringRaw
+    syn region pyFString start=/\z(['"]\{1,3}\)/ end=/\z1/ contained keepend extend
+          \ contains=pyFStringExpr,pyFStringEscape,pyFStringEscapeError
+    syn region pyFStringRaw start=/\z(['"]\{1,3}\)/ end=/\z1/ contained keepend extend
+          \ contains=pyFStringExpr
+    syn cluster pyExpr add=pyFStringStart
+    
+    " any unrecognised '\<something>' is a warning in 3.6, possibly an error
+    " in future versions
+    syn match pyFStringEscapeError contained /\\./ contains=pyFStringEscapeBadDot transparent
+    syn match pyFStringEscapeBadDot contained /\\/
+    hi! link pyFStringEscapeBadDot IncSearch
+
+    syn match pyFStringEscape contained /\\\%($\|[\\'"abfnrtv]\|o\o\o\o\|x\x\x\)/
+    syn match pyFStringEscape contained /{{\|}}/
+    hi! link pyFStringEscape SpecialChar
+
+    " NOTE: this match is for the new python 3.6 f-strings since it accepts an
+    " expr, not just a placeholder
+    syn region pyFStringExpr matchgroup=pyFStringBrace start=/{{\@!/ end=/}/ contained keepend extend
+          \ contains=@pyExpr,pyFMTConversion,pyClFMTSpec
+
+    hi! link pyFStringStart Delimiter
+    hi! link pyFString pyString
+    hi! link pyFStringBrace Delimiter
+  endif
+
+  " type conversion
+  syn match pyFMTConversion contained /![rsa]/ nextgroup=pyClFMTSpec
+  hi! link pyFMTConversion Operator
+
+  syn region pyClFMTSpec matchgroup=pyFMTSpecDelim start=/:/ end=/\ze}/ contained oneline keepend extend
+        \ contains=pyFMTSign,pyFMTAltForm,pyFMTZero,pyFMTWidthGroupingPrecisionType,pyFMTAlign,pyFStringExpr
+  hi! link pyFMTSpecDelim Function
+  " give everything in the format spec IncSearch highlighting ... if the
+  " various parts of the format spec are syntactically correct then the other
+  " bits below will override IncSearch with correct colours
+  hi! link pyClFMTSpec IncSearch
+
+  " format spec
+  syn match pyFMTSign contained /[ +-]/
+  syn match pyFMTAltForm contained /#/
+
+  " the width/grouping/precision all in one
+  syn match pyFMTWidthGroupingPrecisionType contained /[0-9_]*[,_]\=\%(\.[0-9_]\+\)\=[a-zA-Z%]\ze}/ display
+        \ contains=pyFMTType,pyFMTTypeError
+  syn match pyFMTZero contained /0/ contained nextgroup=pyFMTWidthGroupingPrecisionType
+  hi! link pyFMTZero pyFMTAltForm
+
+  syn match pyFMTTypeError contained /[a-zA-Z]/
+  hi! link pyFMTTypeError IncSearch
+  syn match pyFMTType contained /s/
+  syn match pyFMTType contained /[bcdoxXn]/
+  syn match pyFMTType contained /[eEfFgGn%]/
+  syn match pyFMTGrouping contained /,/
+  if s:python36
+    syn match pyFMTGrouping contained /_/
+  else
+    syn match pyFMTGroupingError contained /_/
+    hi! link pyFMTGroupingError Error
+  endif
+
+  " the 'align' needs to come last since it could start with literally any
+  " character
+  syn match pyFMTAlign contained /.\=[<>=^]/
+
+  hi! link pyFMTSign Statement
+  hi! link pyFMTSign Statement
+  hi! link pyFMTAltForm Statement
+  hi! link pyFMTAlign Macro
+  hi! link pyFMTWidthGroupingPrecisionType Number
+  hi! link pyFMTType Type
+" }}}
+
 syn region pyDefRegion matchgroup=pyDef start=/\<def\>/ end=/:/ keepend extend
 			\ nextgroup=@pyClStatements skipwhite
 			\ contains=pyDefParams,@pyClAttributes
