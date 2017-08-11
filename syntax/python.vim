@@ -542,14 +542,26 @@ syn region pyDefRegion matchgroup=pyDef start=/\<def\>/ end=/:/ keepend extend
 hi! link pyDef Keyword
 
 syn region pyDefParams contained matchgroup=pyDefDelim start=/(/ end=/)/ keepend extend
-				\ contains=pyDefParam,pyDefParamTuple,pySelf,pyDefComma,pyParamsUnpack,pyComment,pyDefKwargSep
+				\ contains=pyDefParam,pyDefParamDefault,pyDefParamTuple,pySelf,pyDefComma,pyParamsUnpack,pyComment,pyDefKwargSep
+        \ nextgroup=pyDefType skipwhite
+if s:python34
+  syn match pyDefType /->/ contained nextgroup=@pyExpr skipwhite display
+  hi! link pyDefType pyTypeAnnotation
+endif
 hi! link pyDefDelim Macro
 syn match pyDefParam contained /\<\h\w*\>/ display
-			\ nextgroup=pyDefParamDefault skipwhite
+			\ nextgroup=pyDefParamType skipwhite
 syn region pyDefParamTuple contained matchgroup=pyParenDelim start=/(/ end=/)/ keepend extend
 			\ contains=pyTupleComma
+syn cluster pyTypeExpr add=@pyExpr
+if s:python34
+  syn match pyDefParamType contained /:/ nextgroup=@pyTypeExpr skipwhite display
+  hi! link pyDefParamType pyTypeAnnotation
+endif
 syn match pyDefParamDefault contained /=/ nextgroup=@pyExpr skipwhite display
+
 hi! link pyDefParamDefault Operator
+hi! link pyTypeAnnotation Comment
 
 syn match pyDefComma contained /,/ display
 			\ nextgroup=pyCommaError skipwhite skipnl skipempty
