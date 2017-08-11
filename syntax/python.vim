@@ -987,9 +987,13 @@ hi! link pySpecialMethod SpecialChar
 
 syn region pyClassRegion matchgroup=pyClass start=/^\s*class\>/ end=/:/
 			\ contains=pyKnownModule,@pyClasses,pyClassParentsRegion
-syn region pyClassParentsRegion contained matchgroup=pyclass start=/(/ end=/)/ keepend extend
-			\ contains=@pyClModules,@pyClasses
+syn region pyClassParentsRegion contained matchgroup=pyClass start=/(/ end=/)/ keepend extend
+			\ contains=@pyClModules,@pyClasses,pyClassParamsComma,pyClassKWarg
+syn match pyClassKWarg /\<\h\w*=/ contained contains=pySimpleAssign nextgroup=@pyExpr skipwhite
+hi! link pyClassKWarg pyParamsKW
+syn match pyClassParamsComma /,/ contained
 hi! link pyClass Typedef
+hi! link pyClassParamsComma pyClass
 
 syn cluster pyClasses add=pyKnownClass
 syn keyword pyKnownClass contained UserDict IterableUserDict dict
