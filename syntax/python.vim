@@ -519,6 +519,15 @@ hi! link pyLoop Repeat
   hi! link pyFMTType Type
 " }}}
 
+if s:python35
+  syn keyword pyAsyncDef async
+  hi! link pyAsyncDef pyDef
+else
+  syn keyword pyAsyncError async
+  syn cluster pyExpr add=pyAsyncError
+  hi! link pyAsyncError pyAwaitError
+endif
+
 syn region pyDefRegion matchgroup=pyDef start=/\<def\>/ end=/:/ keepend extend
 			\ nextgroup=@pyClStatements skipwhite
 			\ contains=pyDefParams,@pyClAttributes
@@ -799,7 +808,7 @@ syn match pyListCommaError contained /,/ display
 
 syn cluster pyListComps add=pyListCompRegion
 syn region pyListCompRegion contained keepend extend
-			\ matchgroup=pyListComp start=/\<for\>/ end=/\<in\>/
+			\ matchgroup=pyListComp start=/\<\%(async\_s\+\)\=for\>/ end=/\<in\>/
 			\ contains=pyListCompComma
 "syn region pyListFilterRegion contained keepend extend display
 "			\ start=/\<\zefor\>/
