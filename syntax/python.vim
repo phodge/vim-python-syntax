@@ -70,15 +70,17 @@ endif
 	hi! link pyBoolean Typedef
 
 	" integers
-	syn match pyInteger /\<\%(0\|[1-9]\d*\)\>/ display nextgroup=@pyClOperators,pyCompare skipwhite
-	syn match pyInteger /-[1-9]\d*\>/ display nextgroup=@pyClOperators,pyCompare skipwhite
+  " FIXME: '_' is only allowed in 3.6 and higher
+	syn match pyInteger /\<\%(0\|[1-9]\%(_\d\|\d\+\)*\)\>/ display nextgroup=@pyClOperators,pyCompare skipwhite
+	syn match pyInteger /-[1-9]\%(_\d\|\d\+\)*\>/ display nextgroup=@pyClOperators,pyCompare skipwhite
 	hi! link pyInteger Number
 
 	" floats
-	syn match pyFloat /-\=\d*\.\d\+\>/ display nextgroup=@pyClOperators,pyCompare skipwhite
+	syn match pyFloat /-\=\%(0\|[1-9]\%(_\d\|\d\+\)*\)\=\.\d\+\>/ display nextgroup=@pyClOperators,pyCompare skipwhite
 	hi! link pyFloat pyInteger
 
 	" octal / hex
+  " FIXME: _ is allowed in hex/octal notation as well
 	syn match pyOctalOld contained /0\d\+\>/ contains=pyOctalError
 	syn match pyOctal contained /0o\d\+\>/ contains=pyOctalError
 	syn match pyOctalError contained /[89]\+/
