@@ -19,7 +19,16 @@ let s:python35 = 1
 let s:python36 = 1
 
 if exists('b:python_py3_compat')
-  let s:py3 = type(b:python_py3_compat) == type("") ? b:python_py3_compat : ""
+  " if b:python_py3_compat isn't a string, default to 3.6
+  if type(b:python_py3_compat) == type("")
+    let s:py3 = b:python_py3_compat
+  elseif b:python_py3_compat
+    let s:py3 = '3.6'
+  else
+    let s:py3 = ''
+  endif
+  
+
   " if the buffer var is a string containing a python version, enable
   " everything up to that version
   if s:py3 == '3.5'
