@@ -932,7 +932,7 @@ hi! link pyLoop Repeat
 " the 'not' operator and the '-' operator
 syn cluster pyExpr add=pyNot,pyUnary,pyYield
 syn cluster pyClStatements add=pyYield
-syn match pyNot contained /\<not\>\%(\_s*in\)\@!/ nextgroup=pyCompareIn,@pyExpr skipwhite skipnl
+syn match pyNot contained /\<not\>\%(\_s\+in\>\)\@!/ nextgroup=pyCompareIn,@pyExpr skipwhite skipnl
 syn match pyYield /\<yield\>\%(\_s*from\>\)\=/ nextgroup=@pyExpr skipwhite
 
 if s:python35
