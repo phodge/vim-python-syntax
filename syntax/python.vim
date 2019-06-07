@@ -463,9 +463,9 @@ hi! link pyLoop Repeat
   if s:python36
     syn match pyFStringStart /[fF]\ze['"]/ contained nextgroup=pyFString
     syn match pyFStringStart /\%([Ff]r\|r[fF]\)\ze['"]/ contained nextgroup=pyFStringRaw
-    syn region pyFString start=/\z(['"]\{1,3}\)/ end=/\z1/ contained keepend extend
+    syn region pyFString start=/\z('\(''\)\=\|"\(""\)\=\)/ end=/\z1/ contained keepend extend
           \ contains=pyFStringExpr,pyFStringEscape,pyFStringEscapeError
-    syn region pyFStringRaw start=/\z(['"]\{1,3}\)/ end=/\z1/ contained keepend extend
+    syn region pyFStringRaw start=/\z('\(''\)\=\|"\(""\)\=\)/ end=/\z1/ contained keepend extend
           \ contains=pyFStringExpr
     syn cluster pyExpr add=pyFStringStart
     
