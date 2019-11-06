@@ -536,16 +536,7 @@ hi! link pyLoop Repeat
   hi! link pyFMTType Type
 " }}}
 
-if s:python35
-  syn keyword pyAsyncDef async
-  hi! link pyAsyncDef pyDef
-else
-  syn keyword pyAsyncError async
-  syn cluster pyExpr add=pyAsyncError
-  hi! link pyAsyncError pyAwaitError
-endif
-
-syn region pyDefRegion matchgroup=pyDef start=/\<def\>/ end=/:/ keepend extend
+syn region pyDefRegion matchgroup=pyDef start=/\<\%(async\s\+\)\=def\>/ end=/:/ keepend extend
 			\ nextgroup=@pyClStatements skipwhite
 			\ contains=pyDefParams,@pyClAttributes
 hi! link pyDef Keyword
@@ -902,7 +893,7 @@ hi! link pyDictError Error
 " with {{{
 
 	syn region pyWithRegion keepend extend
-				\ matchgroup=pyWith end=/:/ start=/^\s*with\>/
+				\ matchgroup=pyWith end=/:/ start=/^\s*\%(async\s\+\)\=with\>/
 				\ contains=pyWithInner,@pyExpr
   syn keyword pyWithInner as contained nextgroup=pyIdentifier
   syn match pyWithInner /,/ contained
