@@ -830,12 +830,12 @@ hi! link pySpecialFunction Identifier
 syn cluster pyExpr add=pyList
 syn region pyListAssignRegion keepend extend
 			\ matchgroup=pyListAssignBrace
-			\ start=/\[/ end=/\]/
+			\ start=/\[\%(\_s*{\)\@!/ end=/\]/
 			\ contains=pyListAssignComma
 			\ nextgroup=pyAssign skipwhite
 syn region pyListAssignRegion keepend extend
 			\ matchgroup=pyListAssignBrace
-			\ start=/(/ end=/)/
+			\ start=/(\%(\_s*{\)\@!/ end=/)/
 			\ contains=pyListAssignComma
 			\ nextgroup=pyAssign skipwhite
 syn match pyListAssignComma contained /,/ display
