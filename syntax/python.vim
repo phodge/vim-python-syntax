@@ -1024,6 +1024,33 @@ hi! link pyCompare SpecialChar
 
 " }}}
 
+" match/case statement {{{
+
+  syn region pyMatchRegion matchgroup=pyConditional display
+        \ start=/^\s*\zsmatch\>/
+        \ end=/:/ keepend extend
+        \ nextgroup=@pyClStatements skipwhite
+        \ contains=@pyExpr
+  syn region pyCaseRegion matchgroup=pyStatement display
+        \ start=/^\s*\zscase\>/
+        \ end=/:/ keepend extend
+        \ nextgroup=@pyClStatements skipwhite
+        \ contains=@pyExpr,pyCaseDefault,pyCaseAs
+  " Note: it's not possible to use custom highlighting for pattern-matching
+  " syntax `|` or `if` because those characters will always be matched by the
+  " more general syn items triggered by nextgroup=
+  syn keyword pyCaseDefault contained _
+  syn keyword pyCaseAs contained as
+  "syn match pyCaseDefault display
+  "			\ /^\s*\zscase\s\+_:\>/ keepend extend
+  "			\ nextgroup=@pyClStatements skipwhite
+  "			\ contains=@pyExpr
+  hi! link pyCaseAs pyStatement
+  hi! link pyCaseDefault pyConditional
+
+" }}}
+
+
 " exceptions {{{
 
 	syn match pyTry /^\s*\zs\%(try\|finally\)\s*:/ display
