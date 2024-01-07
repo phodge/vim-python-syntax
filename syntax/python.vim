@@ -976,6 +976,10 @@ syn keyword pySpecialMethod contained
 			\ __call__
 			\ __getattr__ __setattr__ __delattr__ __getattribute__
 			\ __get__ __set__ __delete__
+      \ assert_called assert_called_once assert_called_with assert_called_once_with assert_any_call assert_has_calls assert_not_called reset_mock mock_add_spec attach_mock configure_mock
+      \ called call_count return_value side_effect call_args call_args_list method_calls mock_calls
+      \ assert_awaited assert_awaited_once assert_awaited_with assert_awaited_once_with assert_any_await assert_has_awaits assert_not_awaited
+      \ await_count await_args await_args_list
 if s:python36
   " PEP487
   syn keyword pySpecialMethod contained
