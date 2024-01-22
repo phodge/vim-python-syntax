@@ -872,6 +872,7 @@ hi! link pyIfExpr Operator
 syn cluster pyExpr add=pyDict
 syn region pyDict matchgroup=pyDictBrace start=/{/ end=/}/ keepend extend
 			\ contains=pyDictComma,@pyExpr,pyDictKeyString,pyDictColon,pyComment,@pyListComps
+      \ nextgroup=@pyClOperators skipwhite
 " regular string
 syn region pyDictKeyString contained keepend extend display oneline
 			\ matchgroup=pyDictKey start=/\z(['"]\)/ end=/\z1\s*:/ skip=/\\./
