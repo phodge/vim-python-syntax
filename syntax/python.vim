@@ -153,7 +153,7 @@ syn match pyAnyComma /,/ display nextgroup=@pyExpr skipwhite skipnl skipempty
 hi! link pyAnyComma Macro
 
 if s:python36
-  syn match pyVarTypeOnly /^\s*\zs\h\w*\s*:/ nextgroup=@pyExpr skipwhite display
+  syn match pyVarTypeOnly /^\s*\zs\h\w*\s*:=\@!/ nextgroup=@pyExpr skipwhite display
         \ contains=pyVarTypeColon
   syn match pyVarTypeColon contained /:/
   syn cluster pyClStatements add=pyVarTypeOnly
@@ -378,13 +378,13 @@ endif
 syn region pyIfRegion matchgroup=pyConditional display
 			\ start=/^\s*\zsif\>/
 			\ start=/^\s*\zselif\>/
-			\ end=/:/ keepend extend
+			\ end=/:=\@!/ keepend extend
 			\ nextgroup=@pyClStatements skipwhite
 			\ contains=@pyExpr
 syn match pyConditional /^\s*\zselse\s*:/ display
 syn region pyWhileRegion matchgroup=pyLoop display
 			\ start=/^\s*\zswhile\>/
-			\ end=/:/ keepend extend
+			\ end=/:=\@!/ keepend extend
 			\ nextgroup=@pyClStatements skipwhite
 			\ contains=@pyExpr
 hi! link pyLoop Repeat
