@@ -998,7 +998,7 @@ hi! link pySpecialMethod SpecialChar
 syn region pyClassRegion matchgroup=pyClass start=/^\s*class\>/ end=/:/
 			\ contains=pyKnownModule,@pyClasses,pyClassParentsRegion
 syn region pyClassParentsRegion contained matchgroup=pyClass start=/(/ end=/)/ keepend extend
-			\ contains=@pyClModules,@pyClasses,pyClassParamsComma,pyClassKWarg
+			\ contains=@pyClModules,@pyClasses,pyClassParamsComma,pyClassKWarg,pyComment,pyIdentifier
 syn match pyClassKWarg /\<\h\w*=/ contained contains=pySimpleAssign nextgroup=@pyExpr skipwhite
 hi! link pyClassKWarg pyParamsKW
 syn match pyClassParamsComma /,/ contained
