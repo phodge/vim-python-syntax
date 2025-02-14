@@ -438,7 +438,7 @@ hi! link pyLoop Repeat
 
 " }}}
 
-" del, print, global, nonlocal {{{
+" del, print, global, nonlocal, type {{{
 
 	syn region pyDelRegion keepend display
 				\ matchgroup=pyDel start=/\<del\>/ end=/$\|#\@=/
@@ -453,6 +453,11 @@ hi! link pyLoop Repeat
 	syn match pyGlobalComma contained /,/ nextgroup=pyCommaError skipwhite skipnl
 	hi! link pyGlobalComma pyGlobal
 	hi! link pyGlobal SpecialChar
+
+	syn region pyTypeRegion keepend display
+				\ matchgroup=pyTypeDecl start=/\<type\>/ end=/=/ nextgroup=@pyExpr skipwhite
+				\ contains=@pyClVars,pyComment
+	hi! link pyTypeDecl Include
 
 
 
