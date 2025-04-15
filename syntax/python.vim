@@ -543,8 +543,17 @@ hi! link pyLoop Repeat
 
 syn region pyDefRegion matchgroup=pyDef start=/\<\%(async\s\+\)\=def\>/ end=/:/ keepend extend
 			\ nextgroup=@pyClStatements skipwhite
-			\ contains=pyDefParams,@pyClAttributes
+			\ contains=pyGenericParamsRegion,pyDefParams,@pyClAttributes
 hi! link pyDef Keyword
+
+syn region pyGenericParamsRegion matchgroup=pyGenericParamsComma start=/\[/ end=/\]/ keepend extend
+        \ contains=pyGenericParam,pyGenericParamsComma
+        \ nextgroup=pyDefParams skipwhite
+syn match pyGenericParam contained /\<\h\w*\>\s*:\@=/ nextgroup=pyGenericParamColon skipwhite
+syn match pyGenericParamColon /:/ nextgroup=pyIdentifier,pyString skipwhite skipnl
+hi! link pyGenericParamColon pyGenericParamsComma
+syn match pyGenericParamsComma contained /,/
+hi! link pyGenericParamsComma pyTypeDecl
 
 syn region pyDefParams contained matchgroup=pyDefDelim start=/(/ end=/)/ keepend extend
 				\ contains=pyDefParam,pyDefParamDefault,pyDefParamTuple,pySelf,pyDefComma,pyParamsUnpack,pyComment,pyDefKwargSep
@@ -996,7 +1005,7 @@ hi! link pyKnownMethod Function
 hi! link pySpecialMethod SpecialChar
 
 syn region pyClassRegion matchgroup=pyClass start=/^\s*class\>/ end=/:/
-			\ contains=pyKnownModule,@pyClasses,pyClassParentsRegion
+			\ contains=pyKnownModule,@pyClasses,pyClassParentsRegion,pyGenericParamsRegion
 syn region pyClassParentsRegion contained matchgroup=pyClass start=/(/ end=/)/ keepend extend
 			\ contains=@pyClModules,@pyClasses,pyClassParamsComma,pyClassKWarg,pyComment,pyIdentifier
 syn match pyClassKWarg /\<\h\w*=/ contained contains=pySimpleAssign nextgroup=@pyExpr skipwhite
