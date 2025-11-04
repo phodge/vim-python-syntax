@@ -470,10 +470,14 @@ hi! link pyLoop Repeat
     syn match pyFStringStart /\%([Ff]r\|r[fF]\)\ze['"]/ contained nextgroup=pyFStringRaw
     syn region pyFString start=/\z('\(''\)\=\|"\(""\)\=\)/ end=/\z1/ contained keepend extend
           \ contains=pyFStringExpr,pyFStringEscape,pyFStringEscapeError
+    " TODO: would be nice to highlight regex stuff in these rf"" strings as
+    " well but it's tricky to get things like rf"\d\{{3,4}}" correct.
     syn region pyFStringRaw start=/\z('\(''\)\=\|"\(""\)\=\)/ end=/\z1/ contained keepend extend
-          \ contains=pyFStringExpr
+          \ contains=pyFStringExpr,pyFStringRawEscape
     syn cluster pyExpr add=pyFStringStart
-    
+    syn match pyFStringRawEscape contained /\\[\\'"]\|{{\|}}/ extend
+    hi! link pyFStringRawEscape SpecialChar
+
     " any unrecognised '\<something>' is a warning in 3.6, possibly an error
     " in future versions
     syn match pyFStringEscapeError contained /\\./ contains=pyFStringEscapeBadDot transparent
@@ -491,6 +495,7 @@ hi! link pyLoop Repeat
 
     hi! link pyFStringStart Delimiter
     hi! link pyFString pyString
+    hi! link pyFStringRaw pyString
     hi! link pyFStringBrace Delimiter
   endif
 
