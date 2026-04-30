@@ -292,6 +292,9 @@ syn cluster pyExpr add=pyParenRegion
 syn region pyParenRegion contained matchgroup=pyParenDelim start=/(/ end=/)/ keepend extend
 			\ contains=@pyExpr,pyTupleComma,@pyListComps
 			\ nextgroup=@pyClOperators,pyCompare skipwhite
+syn region pyParenRegionTopLevel matchgroup=pyParenDelim start=/(\ze\%(\w\+\_s*[./+()]\)/ end=/)/ keepend extend
+			\ contains=@pyExpr
+			\ nextgroup=@pyClOperators,pyCompare skipwhite
 hi! link pyParenDelim Statement
 
 " overriding match for simple tuples
@@ -856,7 +859,7 @@ syn region pyListAssignRegion keepend extend
 			\ nextgroup=pyAssign skipwhite
 syn region pyListAssignRegion keepend extend
 			\ matchgroup=pyListAssignBrace
-			\ start=/(\%(\_s*{\)\@!/ end=/)/
+			\ start=,(\%(\_s*{\|\w\+\s*[./()]\)\@!, end=,),
 			\ contains=pyListAssignComma
 			\ nextgroup=pyAssign skipwhite
 syn match pyListAssignComma contained /,/ display
