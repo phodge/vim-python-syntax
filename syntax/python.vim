@@ -895,7 +895,7 @@ hi! link pyIfExpr Operator
 " dictionary
 syn cluster pyExpr add=pyDict
 syn region pyDict matchgroup=pyDictBrace start=/{/ end=/}/ keepend extend
-			\ contains=pyDictComma,@pyExpr,pyDictKeyString,pyDictColon,pyComment,@pyListComps
+			\ contains=pyDictComma,@pyExpr,pyDictKeyString,pyDictColon,pyComment,@pyListComps,pyIfExprRegion
       \ nextgroup=@pyClOperators skipwhite
 " regular string
 syn region pyDictKeyString contained keepend extend display oneline
