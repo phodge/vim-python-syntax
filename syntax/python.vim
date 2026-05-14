@@ -472,6 +472,8 @@ hi! link pyLoop Repeat
           \ contains=pyFStringExpr,pyFStringEscape,pyFStringEscapeError
     " TODO: would be nice to highlight regex stuff in these rf"" strings as
     " well but it's tricky to get things like rf"\d\{{3,4}}" correct.
+    " Example Code:
+    "   pattern = rf"\{{%\s*(\w+)\s+['\"]{some_object.some_field}(\.|-[a-zA-Z0-9]{{6}})"
     syn region pyFStringRaw start=/\z('\(''\)\=\|"\(""\)\=\)/ end=/\z1/ contained keepend extend
           \ contains=pyFStringExpr,pyFStringRawEscape
     syn cluster pyExpr add=pyFStringStart
