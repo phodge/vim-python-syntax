@@ -458,7 +458,7 @@ hi! link pyLoop Repeat
 	hi! link pyGlobal SpecialChar
 
 	syn region pyTypeRegion keepend display
-				\ matchgroup=pyTypeDecl start=/\<type\>/ end=/=/ nextgroup=@pyExpr skipwhite
+				\ matchgroup=pyTypeDecl start=/\<type\>:\@!/ end=/=/ nextgroup=@pyExpr skipwhite
 				\ contains=@pyClVars,pyComment
 	hi! link pyTypeDecl Include
 
