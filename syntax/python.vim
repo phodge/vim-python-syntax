@@ -8,11 +8,6 @@ syn case match
 syn spell default
 
 
-" python2 compatibility?
-if ! exists('b:python_py2_compat')
-  let b:python_py2_compat = 1
-endif
-
 " do we want to enable highlighting of any py3 syntax?
 let s:python34 = 1
 let s:python35 = 1
@@ -367,15 +362,9 @@ hi! link pyParamsKW Include
 hi! link pySimpleAssign pyAssign
 
 syn cluster pyClStatements add=pyPrintRegionAfter
-if b:python_py2_compat
-  syn region pyPrintRegionAfter matchgroup=pyPrint start=/\<print\>/ end=/$\|#\@=/ keepend display
-        \ contains=@pyExpr,pyPrintComma,pyPrintRedirect
-        \ contained oneline
-else
-  syn region pyPrintRegionAfter matchgroup=pyPrint start=/\<print\s*(/ end=/)/ keepend display
-        \ contains=@pyExpr,pyPrintComma
-        \ contained oneline
-endif
+syn region pyPrintRegionAfter matchgroup=pyPrint start=/\<print\s*(/ end=/)/ keepend display
+      \ contains=@pyExpr,pyPrintComma
+      \ contained oneline
 
 
 syn region pyIfRegion matchgroup=pyConditional display
@@ -592,12 +581,7 @@ syn match pyDefComma contained /,/ display
 hi! link pyDefComma pyDef
 
 syn match pyDefKwargSep contained /\*,\@=/
-if b:python_py2_compat
-  " if we need to be python2-compatible, make the kwarg separator an error
-  hi! link pyDefKwargSep Error
-else
-  hi! link pyDefKwargSep pyDefComma
-endif
+hi! link pyDefKwargSep pyDefComma
 
 syn keyword pyFrom from nextgroup=pyFromModule skipwhite
 syn region pyImportRegion matchgroup=pyFrom start=/\<import\>/ end=/$\|#\@=/
