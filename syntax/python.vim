@@ -8,33 +8,6 @@ syn case match
 syn spell default
 
 
-" do we want to enable highlighting of any py3 syntax?
-let s:python36 = 1
-
-if exists('b:python_py3_compat')
-  " if b:python_py3_compat isn't a string, default to 3.6
-  if type(b:python_py3_compat) == type("")
-    let s:py3 = b:python_py3_compat
-  elseif b:python_py3_compat
-    let s:py3 = '3.6'
-  else
-    let s:py3 = ''
-  endif
-  
-
-  " if the buffer var is a string containing a python version, enable
-  " everything up to that version
-  if s:py3 == '3.5'
-    let s:python36 = 0
-  elseif s:py3 == '3.4'
-    let s:python36 = 0
-  elseif s:py3 != '3.6'
-    let s:python36 = 0
-  endif
-  unlet s:py3
-endif
-
-
 " ERRORS {{{
 
 	" these matches are defined first so that they have minimum priority
@@ -142,13 +115,11 @@ syn match pyIdentifierStatementAfter /\h\w*/ display
 syn match pyAnyComma /,/ display nextgroup=@pyExpr skipwhite skipnl skipempty
 hi! link pyAnyComma Macro
 
-if s:python36
-  syn match pyVarTypeOnly /^\s*\zs\h\w*\s*:=\@!/ nextgroup=@pyExpr skipwhite display
-        \ contains=pyVarTypeColon
-  syn match pyVarTypeColon contained /:/
-  syn cluster pyClStatements add=pyVarTypeOnly
-  hi! link pyVarTypeColon Comment
-endif
+syn match pyVarTypeOnly /^\s*\zs\h\w*\s*:=\@!/ nextgroup=@pyExpr skipwhite display
+      \ contains=pyVarTypeColon
+syn match pyVarTypeColon contained /:/
+syn cluster pyClStatements add=pyVarTypeOnly
+hi! link pyVarTypeColon Comment
 
 " match a variable somewhere
 syn cluster pyExpr add=pyIdentifier,pySelf
@@ -452,41 +423,39 @@ hi! link pyLoop Repeat
 
 " {{{ format-strings
 
-  if s:python36
-    syn match pyFStringStart /[fF]\ze['"]/ contained nextgroup=pyFString
-    syn match pyFStringStart /\%([Ff]r\|r[fF]\)\ze['"]/ contained nextgroup=pyFStringRaw
-    syn region pyFString start=/\z('\(''\)\=\|"\(""\)\=\)/ end=/\z1/ contained keepend extend
-          \ contains=pyFStringExpr,pyFStringEscape,pyFStringEscapeError
-    " TODO: would be nice to highlight regex stuff in these rf"" strings as
-    " well but it's tricky to get things like rf"\d\{{3,4}}" correct.
-    " Example Code:
-    "   pattern = rf"\{{%\s*(\w+)\s+['\"]{some_object.some_field}(\.|-[a-zA-Z0-9]{{6}})"
-    syn region pyFStringRaw start=/\z('\(''\)\=\|"\(""\)\=\)/ end=/\z1/ contained keepend extend
-          \ contains=pyFStringExpr,pyFStringRawEscape
-    syn cluster pyExpr add=pyFStringStart
-    syn match pyFStringRawEscape contained /\\[\\'"]\|{{\|}}/ extend
-    hi! link pyFStringRawEscape SpecialChar
+  syn match pyFStringStart /[fF]\ze['"]/ contained nextgroup=pyFString
+  syn match pyFStringStart /\%([Ff]r\|r[fF]\)\ze['"]/ contained nextgroup=pyFStringRaw
+  syn region pyFString start=/\z('\(''\)\=\|"\(""\)\=\)/ end=/\z1/ contained keepend extend
+        \ contains=pyFStringExpr,pyFStringEscape,pyFStringEscapeError
+  " TODO: would be nice to highlight regex stuff in these rf"" strings as
+  " well but it's tricky to get things like rf"\d\{{3,4}}" correct.
+  " Example Code:
+  "   pattern = rf"\{{%\s*(\w+)\s+['\"]{some_object.some_field}(\.|-[a-zA-Z0-9]{{6}})"
+  syn region pyFStringRaw start=/\z('\(''\)\=\|"\(""\)\=\)/ end=/\z1/ contained keepend extend
+        \ contains=pyFStringExpr,pyFStringRawEscape
+  syn cluster pyExpr add=pyFStringStart
+  syn match pyFStringRawEscape contained /\\[\\'"]\|{{\|}}/ extend
+  hi! link pyFStringRawEscape SpecialChar
 
-    " any unrecognised '\<something>' is a warning in 3.6, possibly an error
-    " in future versions
-    syn match pyFStringEscapeError contained /\\./ contains=pyFStringEscapeBadDot transparent
-    syn match pyFStringEscapeBadDot contained /\\/
-    hi! link pyFStringEscapeBadDot IncSearch
+  " any unrecognised '\<something>' is a warning in 3.6, possibly an error
+  " in future versions
+  syn match pyFStringEscapeError contained /\\./ contains=pyFStringEscapeBadDot transparent
+  syn match pyFStringEscapeBadDot contained /\\/
+  hi! link pyFStringEscapeBadDot IncSearch
 
-    syn match pyFStringEscape contained /\\\%($\|[\\'"abfnrtv]\|o\o\o\o\|x\x\x\)/
-    syn match pyFStringEscape contained /{{\|}}/
-    hi! link pyFStringEscape SpecialChar
+  syn match pyFStringEscape contained /\\\%($\|[\\'"abfnrtv]\|o\o\o\o\|x\x\x\)/
+  syn match pyFStringEscape contained /{{\|}}/
+  hi! link pyFStringEscape SpecialChar
 
-    " NOTE: this match is for the new python 3.6 f-strings since it accepts an
-    " expr, not just a placeholder
-    syn region pyFStringExpr matchgroup=pyFStringBrace start=/{{\@!/ end=/}/ contained keepend extend
-          \ contains=@pyExpr,pyFMTConversion,pyClFMTSpec
+  " NOTE: this match is for the new python 3.6 f-strings since it accepts an
+  " expr, not just a placeholder
+  syn region pyFStringExpr matchgroup=pyFStringBrace start=/{{\@!/ end=/}/ contained keepend extend
+        \ contains=@pyExpr,pyFMTConversion,pyClFMTSpec
 
-    hi! link pyFStringStart Delimiter
-    hi! link pyFString pyString
-    hi! link pyFStringRaw pyString
-    hi! link pyFStringBrace Delimiter
-  endif
+  hi! link pyFStringStart Delimiter
+  hi! link pyFString pyString
+  hi! link pyFStringRaw pyString
+  hi! link pyFStringBrace Delimiter
 
   " type conversion
   syn match pyFMTConversion contained /![rsa]/ nextgroup=pyClFMTSpec
@@ -516,12 +485,7 @@ hi! link pyLoop Repeat
   syn match pyFMTType contained /[bcdoxXn]/
   syn match pyFMTType contained /[eEfFgGn%]/
   syn match pyFMTGrouping contained /,/
-  if s:python36
-    syn match pyFMTGrouping contained /_/
-  else
-    syn match pyFMTGroupingError contained /_/
-    hi! link pyFMTGroupingError Error
-  endif
+  syn match pyFMTGrouping contained /_/
 
   " the 'align' needs to come last since it could start with literally any
   " character
@@ -655,10 +619,8 @@ endfor
 call <SID>AddModule('typing', 'Any Union TypeVar Generic NewType Type Iterable Iterator Reversible SupportsInt SupportsFloat SupportsComplex SupportsBytes SupportsAbs SupportsRound Container Hashable Sized AbstractSet MutableSet Mapping MutableMapping Sequence MutableSequence ByteString List Set ForzenSet MappingView KeysView ItemsView ValuesView Awaitable Coroutine AsyncIterable AsyncIterator Dict DefaultDict Generator AsyncGenerator Text io re NamedTuple cast get_type_hints Optional Tuple Callable ClassVar TYPE_CHECKING')
 " these ones are decorators
 call <SID>AddModule('typing', 'overload no_type_check no_type_check_decorator')
-if s:python36
-  " these were added in 3.6
-  call <SID>AddModule('typing', 'Collection Deque ContextManager Counter ChainMap')
-endif
+" these were added in 3.6
+call <SID>AddModule('typing', 'Collection Deque ContextManager Counter ChainMap')
 
 " types
 call <SID>AddModule('types', 'NoneType TypeType ObjectType IntType LongType FloatType BooleanType ComplexType StringType UnicodeType, StringTypes BufferType TupleType ListType DictType FunctionType LambdaType CodeType GeneratorType ClassType UnboundMethodType InstanceType MethodType BuiltinFunctionType BuiltinMethodType ModuleType FileType XRangeType TracebackType FrameType SliceType EllipsisType DictProxyType NotImplementedType GetSetDescriptorType MemberDescriptorType')
@@ -925,9 +887,7 @@ syn match pyNot contained /\<not\>\%(\_s\+in\>\)\@!/ nextgroup=pyCompareIn,@pyEx
 syn match pyYield /\<yield\>\%(\_s*from\>\)\=/ nextgroup=@pyExpr skipwhite
 
 syn keyword pyAwait await nextgroup=@pyExpr skipwhite
-if s:python36
-  syn cluster pyExpr add=pyAwait
-endif
+syn cluster pyExpr add=pyAwait
 hi! link pyAwait pyYield
 
 syn match pyUnary contained /[\-+~]\d\@!/
@@ -972,11 +932,9 @@ syn keyword pySpecialMethod contained
       \ called call_count return_value side_effect call_args call_args_list method_calls mock_calls
       \ assert_awaited assert_awaited_once assert_awaited_with assert_awaited_once_with assert_any_await assert_has_awaits assert_not_awaited
       \ await_count await_args await_args_list
-if s:python36
-  " PEP487
-  syn keyword pySpecialMethod contained
-        \ __init_subclass__ __set_name__
-endif
+" PEP487
+syn keyword pySpecialMethod contained
+      \ __init_subclass__ __set_name__
 
 hi! link pyKnownMethod Function
 hi! link pySpecialMethod SpecialChar
