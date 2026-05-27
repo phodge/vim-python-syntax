@@ -9,7 +9,6 @@ syn spell default
 
 
 " do we want to enable highlighting of any py3 syntax?
-let s:python35 = 1
 let s:python36 = 1
 
 if exists('b:python_py3_compat')
@@ -29,10 +28,8 @@ if exists('b:python_py3_compat')
     let s:python36 = 0
   elseif s:py3 == '3.4'
     let s:python36 = 0
-    let s:python35 = 0
   elseif s:py3 != '3.6'
     let s:python36 = 0
-    let s:python35 = 0
   endif
   unlet s:py3
 endif
@@ -655,14 +652,12 @@ for s:pipe in [ 'stderr', 'stdout' ]
 	call <SID>AddSubModule('sys', s:pipe, 'write')
 endfor
 
-if s:python35
-  call <SID>AddModule('typing', 'Any Union TypeVar Generic NewType Type Iterable Iterator Reversible SupportsInt SupportsFloat SupportsComplex SupportsBytes SupportsAbs SupportsRound Container Hashable Sized AbstractSet MutableSet Mapping MutableMapping Sequence MutableSequence ByteString List Set ForzenSet MappingView KeysView ItemsView ValuesView Awaitable Coroutine AsyncIterable AsyncIterator Dict DefaultDict Generator AsyncGenerator Text io re NamedTuple cast get_type_hints Optional Tuple Callable ClassVar TYPE_CHECKING')
-  " these ones are decorators
-  call <SID>AddModule('typing', 'overload no_type_check no_type_check_decorator')
-  if s:python36
-    " these were added in 3.6
-    call <SID>AddModule('typing', 'Collection Deque ContextManager Counter ChainMap')
-  endif
+call <SID>AddModule('typing', 'Any Union TypeVar Generic NewType Type Iterable Iterator Reversible SupportsInt SupportsFloat SupportsComplex SupportsBytes SupportsAbs SupportsRound Container Hashable Sized AbstractSet MutableSet Mapping MutableMapping Sequence MutableSequence ByteString List Set ForzenSet MappingView KeysView ItemsView ValuesView Awaitable Coroutine AsyncIterable AsyncIterator Dict DefaultDict Generator AsyncGenerator Text io re NamedTuple cast get_type_hints Optional Tuple Callable ClassVar TYPE_CHECKING')
+" these ones are decorators
+call <SID>AddModule('typing', 'overload no_type_check no_type_check_decorator')
+if s:python36
+  " these were added in 3.6
+  call <SID>AddModule('typing', 'Collection Deque ContextManager Counter ChainMap')
 endif
 
 " types
@@ -929,17 +924,11 @@ syn cluster pyClStatements add=pyYield
 syn match pyNot contained /\<not\>\%(\_s\+in\>\)\@!/ nextgroup=pyCompareIn,@pyExpr skipwhite skipnl
 syn match pyYield /\<yield\>\%(\_s*from\>\)\=/ nextgroup=@pyExpr skipwhite
 
-if s:python35
-  syn keyword pyAwait await nextgroup=@pyExpr skipwhite
-  if s:python36
-    syn cluster pyExpr add=pyAwait
-  endif
-  hi! link pyAwait pyYield
-else
-  syn keyword pyAwaitError await
-  syn cluster pyExpr add=pyAwaitError
-  hi! link pyAwaitError Error
+syn keyword pyAwait await nextgroup=@pyExpr skipwhite
+if s:python36
+  syn cluster pyExpr add=pyAwait
 endif
+hi! link pyAwait pyYield
 
 syn match pyUnary contained /[\-+~]\d\@!/
 hi! link pyNot Operator
