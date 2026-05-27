@@ -9,7 +9,6 @@ syn spell default
 
 
 " do we want to enable highlighting of any py3 syntax?
-let s:python34 = 1
 let s:python35 = 1
 let s:python36 = 1
 
@@ -34,7 +33,6 @@ if exists('b:python_py3_compat')
   elseif s:py3 != '3.6'
     let s:python36 = 0
     let s:python35 = 0
-    let s:python34 = 0
   endif
   unlet s:py3
 endif
@@ -557,22 +555,18 @@ hi! link pyGenericParamsComma pyTypeDecl
 syn region pyDefParams contained matchgroup=pyDefDelim start=/(/ end=/)/ keepend extend
 				\ contains=pyDefParam,pyDefParamDefault,pyDefParamTuple,pySelf,pyDefComma,pyParamsUnpack,pyComment,pyDefKwargSep
         \ nextgroup=pyDefType skipwhite
-if s:python34
-  syn match pyDefType /->/ contained nextgroup=@pyExpr skipwhite display
-  hi! link pyDefType pyTypeAnnotation
-endif
-hi! link pyDefDelim Macro
+syn match pyDefType /->/ contained nextgroup=@pyExpr skipwhite display
 syn match pyDefParam contained /\<\h\w*\>/ display
 			\ nextgroup=pyDefParamType skipwhite
 syn region pyDefParamTuple contained matchgroup=pyParenDelim start=/(/ end=/)/ keepend extend
 			\ contains=pyTupleComma
 syn cluster pyTypeExpr add=@pyExpr
-if s:python34
-  syn match pyDefParamType contained /:/ nextgroup=@pyTypeExpr skipwhite display
-  hi! link pyDefParamType pyTypeAnnotation
-endif
+syn match pyDefParamType contained /:/ nextgroup=@pyTypeExpr skipwhite display
 syn match pyDefParamDefault contained /=/ nextgroup=@pyExpr skipwhite display
 
+hi! link pyDefType pyTypeAnnotation
+hi! link pyDefDelim Macro
+hi! link pyDefParamType pyTypeAnnotation
 hi! link pyDefParamDefault Operator
 hi! link pyTypeAnnotation Comment
 
