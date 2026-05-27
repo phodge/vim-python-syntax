@@ -342,7 +342,7 @@ syn cluster pyExpr add=pyCall
 syn match pyCall /\<\h\w*\ze\%(\s*(\)/ contains=@pyKnownFunctions,pySpecialFunction
 			\ nextgroup=pyParamsRegion skipwhite
 syn region pyParamsRegion contained matchgroup=pyParamsDelim start=/(/ end=/)/ keepend extend
-			\ contains=@pyExpr,pyParamsComma,pyParamsUnpack,pyParamsKW
+			\ contains=@pyExpr,pyParamsComma,pyParamsUnpack,pyParamsKW,pyIfExprRegion
 			\ nextgroup=@pyClOperators,pyCompare,pyParamsRegion skipwhite
 hi! link pyParamsDelim Delimiter
 syn match pyParamsComma contained /,/ display
