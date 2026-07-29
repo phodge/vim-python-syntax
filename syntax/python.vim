@@ -251,7 +251,7 @@ hi! link pyRegexComment Comment
 " highlighting for () regions
 syn cluster pyExpr add=pyParenRegion
 syn region pyParenRegion contained matchgroup=pyParenDelim start=/(/ end=/)/ keepend extend
-			\ contains=@pyExpr,pyTupleComma,@pyListComps
+			\ contains=@pyExpr,pyTupleComma,@pyListComps,pyIfExprRegion
 			\ nextgroup=@pyClOperators,pyCompare skipwhite
 syn region pyParenRegionTopLevel matchgroup=pyParenDelim start=/(\ze\%(\w\+\_s*[./+()]\)/ end=/)/ keepend extend
 			\ contains=@pyExpr
