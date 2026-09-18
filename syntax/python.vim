@@ -265,7 +265,7 @@ hi! link pyTupleComma Typedef
 
 " formatting and escape characters in strings
 syn cluster pyClInString add=pyPrintfKnown,pyPrintfError
-syn match pyPrintfError contained /%\%((.\{-})\)\=./ display
+syn match pyPrintfError contained /%["']\@!\%((.\{-})\)\=./ display
 syn match pyPrintfKnown contained /%\%((\h\w*)\)\=[disr]/ display contains=pyPrintfKey
 syn match pyPrintfKey contained /(\zs\h\w*\ze)/ display
 " TODO: check string interpolation in manual
