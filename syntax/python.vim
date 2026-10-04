@@ -86,7 +86,7 @@ syn spell default
 syn cluster pyClOperators add=pyItemAccess
 syn region pyItemAccess contained keepend extend
 			\ contains=@pyExpr,pyItemRange
-			\ nextgroup=@pyClOperators skipwhite
+			\ nextgroup=@pyClOperators,pyParamsRegion skipwhite
 			\ matchgroup=pyItemDelim start=/\[/ end=/\]/
 			\ matchgroup=Error end=/[)}]/
 syn match pyItemRange contained /:/
